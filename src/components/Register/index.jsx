@@ -35,7 +35,7 @@ const styles = {
   max-width: 500px;
   padding: 20px;
   gap: 20px;
-  margin-top: 200px;
+  margin-top: 10%;
   `,
   form: css`
   m: 1;

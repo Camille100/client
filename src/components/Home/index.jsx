@@ -8,15 +8,23 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import PlaceIcon from '@mui/icons-material/Place';
+import * as turf from '@turf/circle';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { LngLat } from 'mapbox-gl';
 import { useSelector } from 'react-redux';
 
 import DumpForm from './components/DumpForm';
+import EventForm from './components/EventForm';
+import DumpMarker from './components/DumpMarker';
+import EventMarker from './components/EventMarker';
+import { getDumps } from '../../services/dumpServices';
+import { getEvents } from '../../services/eventServices';
 
 const Home = () => {
   const [openDumpForm, setOpenDumpForm] = useState(false);
   const [openEventForm, setOpenEventForm] = useState(false);
+  const [dumps, setDumps] = useState([]);
+  const [events, setEvents] = useState([]);
   const [viewport, setViewport] = useState({});
   const [coordinates, setCoordinates] = useState({
     longitude: undefined,
@@ -33,10 +41,16 @@ const Home = () => {
         zoom: 12,
       });
     });
+
+    getDumps().then((res) => {
+      setDumps(res.data);
+    });
+    getEvents().then((res) => {
+      setEvents(res.data);
+    });
   }, []);
 
   const handleMarker = (e) => {
-    console.log(e);
     setCoordinates({
       longitude: e.lngLat.lng,
       latitude: e.lngLat.lat,
@@ -52,6 +66,10 @@ const Home = () => {
 
   const handleDump = () => {
     setOpenDumpForm(true);
+  };
+
+  const handleEvent = () => {
+    setOpenEventForm(true);
   };
 
   return (
@@ -74,9 +92,21 @@ const Home = () => {
               positionOptions={{ enableHighAccuracy: true }}
               trackUserLocation
             />
+            {dumps && dumps.length > 0
+            && dumps.map((dump, index) => (
+              <DumpMarker key={`dump-marker-${index + 1}`} dump={dump} />
+            ))}
+            {events && events.length > 0
+            && events.map((event, index) => (
+              <EventMarker key={`event-marker-${index + 1}`} event={event} />
+            ))}
             {coordinates.longitude !== undefined && coordinates.latitude !== undefined
             && (
-            <Marker longitude={coordinates.longitude} latitude={coordinates.latitude} anchor="bottom">
+            <Marker
+              longitude={coordinates.longitude}
+              latitude={coordinates.latitude}
+              anchor="bottom"
+            >
               <PlaceIcon
                 sx={{
                   fontSize: '30px',
@@ -103,9 +133,12 @@ const Home = () => {
               key="event"
               icon={<EventAvailableIcon />}
               tooltipTitle="Ajouter un évènement"
+              disabled={!user.loggedIn}
+              onClick={handleEvent}
             />
           </SpeedDial>
           <DumpForm open={openDumpForm} setOpen={setOpenDumpForm} coordinates={coordinates} />
+          <EventForm open={openEventForm} setOpen={setOpenEventForm} coordinates={coordinates} />
         </div>
       )}
     </div>

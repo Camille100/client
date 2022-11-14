@@ -12,6 +12,8 @@ import NoMatch from '../NoMatch';
 import Login from '../Login';
 import Register from '../Register';
 import Blocked from '../Blocked';
+import Dump from '../Dump';
+import DumpHistory from '../DumpHistory';
 
 const PrivateRoute = ({ children }) => {
   const isUserAuthenticated = useSelector((state) => state.user.loggedIn);
@@ -38,6 +40,22 @@ const RoutesWrapper = () => (
         element={(
           <PrivateRoute>
             <Blocked />
+          </PrivateRoute>
+                )}
+      />
+      <Route
+        path="/dump/:dumpId"
+        element={(
+          <PrivateRoute>
+            <Dump />
+          </PrivateRoute>
+                )}
+      />
+      <Route
+        path="/dumps"
+        element={(
+          <PrivateRoute>
+            <DumpHistory />
           </PrivateRoute>
                 )}
       />

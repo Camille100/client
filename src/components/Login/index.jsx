@@ -51,7 +51,7 @@ const Login = () => {
     min-height: 300px;
     width: 100%;
     max-width: 600px;
-    margin-top: 200px;
+    margin-top: 10%;
     `,
     logoContainer: css`
     display: flex;
