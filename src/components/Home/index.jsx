@@ -81,7 +81,7 @@ const Home = () => {
       {viewport.latitude && viewport.longitude && (
         <div>
           <Map
-            mapboxAccessToken="pk.eyJ1IjoiY2FtaWxsZS1nZXJhcmQiLCJhIjoiY2xhY2U4NDYyMDk5MzNvczQyYjFnbHpxYSJ9.gE3NI2Pym2aYOUq6psRGyA"
+            mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             initialViewState={viewport}
             mapStyle="mapbox://styles/mapbox/light-v9"
             style={{ width: '100vw', height: '100vh' }}
@@ -98,7 +98,7 @@ const Home = () => {
             ))}
             {events && events.length > 0
             && events.map((event, index) => (
-              <EventMarker key={`event-marker-${index + 1}`} event={event} />
+              <EventMarker key={`event-marker-${index + 1}`} event={event} index={index} />
             ))}
             {coordinates.longitude !== undefined && coordinates.latitude !== undefined
             && (
