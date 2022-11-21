@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
@@ -15,7 +16,7 @@ import {
   Button,
 } from '@mui/material';
 import { css, jsx } from '@emotion/react';
-import { Source, Layer } from 'react-map-gl';
+import { Source, Layer, Marker } from 'react-map-gl';
 import PlaceIcon from '@mui/icons-material/Place';
 
 const styles = {
@@ -35,25 +36,42 @@ const styles = {
   `,
 };
 
-const EventMarker = ({ event }) => {
+const EventMarker = ({ event, index }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  // console.log(event);
-  const handleOpen = (e) => {
-    setAnchorEl(e.currentTarget);
+  const [openPopover, setOpenPopover] = useState(false);
+
+  const handleOpen = () => {
     setOpen(true);
+  };
+  const handleOpenPopover = (e) => {
+    setAnchorEl(e.currentTarget);
+    setOpenPopover(true);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
     setOpen(false);
+  };
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+    setOpenPopover(false);
+  };
+
+  const geojson = {
+    type: 'FeatureCollection',
+    features: [
+      { type: 'Feature', geometry: { type: event.location.type, coordinates: event.location.coordinates } },
+    ],
   };
   return (
     <div>
       <Popover
-        open={open}
+        open={openPopover}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={() => {
+          handleClose();
+          handleClosePopover();
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'center',
@@ -64,7 +82,10 @@ const EventMarker = ({ event }) => {
         }}
       >
         <Card
-          onMouseLeave={handleClose}
+          onMouseLeave={() => {
+            handleClose();
+            handleClosePopover();
+          }}
           sx={styles.card}
         >
           <CardContent sx={{ height: '100%', width: '100%' }}>
@@ -80,10 +101,10 @@ const EventMarker = ({ event }) => {
               </div>
               <div css={styles.section}>
                 <Typography variant="subtitle2" sx={styles.title}>Equipements nécessaires au nettoyage: </Typography>
-                {event.equipments.map((equipment, index) => (
+                {event.equipments.map((equipment, equipmentIndex) => (
                   <Typography
                     variant="body2"
-                    key={`equipment-${index + 1}`}
+                    key={`equipment-${equipmentIndex + 1}`}
                     sx={styles.text}
                   >
                     {equipment.name}
@@ -104,17 +125,37 @@ const EventMarker = ({ event }) => {
           </CardContent>
         </Card>
       </Popover>
-      <Source id="my-data" type="geojson" data={event.location}>
+      <Marker
+        longitude={event.center[0]}
+        latitude={event.center[1]}
+        anchor="top"
+      >
+        <PlaceIcon
+          sx={{
+            fontSize: '30px',
+          }}
+          color="secondary"
+          onMouseEnter={(e) => {
+            handleOpenPopover(e);
+            handleOpen();
+          }}
+          // onMouseLeave={handleClose}
+        />
+      </Marker>
+      {open
+      && (
+      <Source id={`source-${index + 1}`} type="geojson" data={geojson}>
         <Layer
-          id="point-90-hi"
+          id={`layer-${index + 1}`}
           type="fill"
           paint={{
-            'fill-color': '#088',
+            'fill-color': '#848484',
             'fill-opacity': 0.4,
-            'fill-outline-color': 'yellow',
+            'fill-outline-color': '#81B19B',
           }}
         />
       </Source>
+      )}
     </div>
   );
 };
