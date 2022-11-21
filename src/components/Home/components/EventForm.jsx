@@ -105,7 +105,14 @@ const EventForm = ({ coordinates, open, setOpen }) => {
   };
 
   const handleAddEvent = () => {
-    console.log(polygon);
+    if (radius === 0 || Object.values(coordinates).length === 0) {
+      dispatch(openToast({ message: 'Veuillez sélectionner un point sur la carte et un rayon', severity: 'error' }));
+      return;
+    }
+    if (!user.userId || !comment) {
+      dispatch(openToast({ message: 'Veuillez compléter tous les champs', severity: 'error' }));
+      return;
+    }
     const eventObj = {
       creator: user.userId,
       comment,
@@ -113,11 +120,19 @@ const EventForm = ({ coordinates, open, setOpen }) => {
       beginDate: new Date(beginDate),
       endDate: new Date(endDate),
       location: polygon,
+      center: [coordinates.longitude, coordinates.latitude],
       equipment: equipmentList,
       accessible: checked,
     };
-    console.log(eventObj);
-    addEvent(eventObj).then((res) => console.log(res));
+    addEvent(eventObj).then((res) => {
+      if (res.status === 200) {
+        dispatch(openToast({ message: 'Evènement enregistré avec succès', severity: 'success' }));
+        handleClose();
+        return;
+      }
+      dispatch(openToast({ message: 'Echec de l&apos;enregistrement de l&apos;évènement', severity: 'error' }));
+      handleClose();
+    });
   };
 
   return (

@@ -36,8 +36,6 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  // console.log(user);
-
   useEffect(() => {
     if (user.loggedIn) {
       getEquipments().then((res) => {
@@ -99,7 +97,6 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
       accessible: checked,
       pictures: uploadedFiles,
     };
-    // console.log(dumpObj);
     addDump(dumpObj).then((res) => {
       if (res.status === 201) {
         handleClose();
@@ -153,7 +150,7 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
               />
               <PickerInline
-                apikey="AstvA1fojQ6MQXCfDVJF1z"
+                apikey={process.env.REACT_APP_FILE_STACK_KEY}
                 pickerOptions={{
                   fromSources: ['local_file_system'],
                   maxFiles: 5,
@@ -162,9 +159,7 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
                     'File {displayName} is not an accepted file type. The accepted file types are {types}': 'File {displayName} is not an accepted file type. The accepted file types are .jpeg, .jpg, .png',
                   },
                 }}
-                // onSuccess={(res) => console.log(res)}
                 onUploadDone={(res) => {
-                  // console.log(res);
                   const uploadedFilesArr = [];
                   res.filesUploaded.forEach((file) => {
                     uploadedFilesArr.push(file.url);
