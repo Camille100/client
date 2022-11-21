@@ -127,7 +127,7 @@ const Register = () => {
           label="Password"
         />
       </FormControl>
-      <Button variant="contained" onClick={handleForm}>Se connecter</Button>
+      <Button variant="contained" onClick={handleForm}>S&apos;inscrire</Button>
       <Typography variant="caption">
         Déjà inscrit? c&apos;est par
         {' '}
