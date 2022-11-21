@@ -20,6 +20,14 @@ const theme = createTheme({
       main: '#646464',
       contrastText: '#fff',
     },
+    paleGreen: {
+      main: '#81B19B',
+      contrastText: '#fff',
+    },
+    paleYellow: {
+      main: '#FFCB7D',
+      contrastText: '#fff',
+    },
   },
   components: {
     MuiButton: {
