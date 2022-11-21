@@ -7,3 +7,11 @@ export const getUsers = () => instance.get('/user/users')
 export const getUser = (body) => instance.post('/user/user', body)
   .then((response) => response)
   .catch((error) => error);
+
+export const updateUser = (userId, body) => instance.put(`/user/update/${userId}`, body)
+  .then((response) => response)
+  .catch((error) => error);
+
+export const deleteUser = (userId) => instance.delete(`/user/delete/${userId}`)
+  .then((response) => response)
+  .catch((error) => error);
