@@ -5,10 +5,11 @@ import {
   Card, Tabs, Tab, Box, Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SignaledDumps from './components/SignaledDumps';
 import CleanedDumps from './components/CleanedDumps';
 import { getDumpsByUser } from '../../services/dumpServices';
+import { openToast } from '../../redux/slices/toastSlice';
 
 const TabPanel = (props) => {
   const {
@@ -40,10 +41,21 @@ TabPanel.propTypes = {
 
 const DumpHistory = () => {
   const [value, setValue] = useState(0);
+  const [signaledDumps, setSignaledDumps] = useState([]);
+  const [cleanedDumps, setCleanedDumps] = useState([]);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getDumpsByUser(user.userId).then((res) => console.log(res));
+    getDumpsByUser(user.userId).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        setCleanedDumps(res.data.cleanedDumps);
+        setSignaledDumps(res.data.signaledDumps);
+        return;
+      }
+      dispatch(openToast({ message: 'Récupération des décharges échouée', severity: 'error' }));
+    });
   }, []);
 
   function a11yProps(index) {
@@ -70,10 +82,10 @@ const DumpHistory = () => {
         <Tab label="Décharges nettoyées" {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <SignaledDumps userId={user.userId} />
+        <SignaledDumps userId={user.userId} dumps={signaledDumps} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CleanedDumps userId={user.userId} />
+        <CleanedDumps userId={user.userId} dumps={cleanedDumps} />
       </TabPanel>
     </Card>
   );
