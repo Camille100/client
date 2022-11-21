@@ -18,6 +18,7 @@ import {
   Divider,
   Menu,
   MenuItem,
+  Collapse,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import {
@@ -34,6 +35,9 @@ import {
   Login,
   Logout,
   AppRegistration,
+  ExpandLess,
+  ExpandMore,
+  AdminPanelSettings,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useDispatch, useSelector } from 'react-redux';
@@ -79,6 +83,7 @@ const styles = {
 const Layout = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [collapse, setCollapse] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -87,6 +92,10 @@ const Layout = () => {
 
   const handleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleCollapse = () => {
+    setCollapse(!collapse);
   };
 
   const handleClick = (event) => {
@@ -278,6 +287,43 @@ const Layout = () => {
                 <ListItemText primary="Assistance" />
               </ListItemButton>
             </ListItem>
+            {userState.loggedIn && userState.role === 'admin'
+            && (
+            <>
+              <ListItem disablePadding>
+                <ListItemButton onClick={handleCollapse} component={Link} to="/">
+                  <ListItemIcon>
+                    <AdminPanelSettings />
+                  </ListItemIcon>
+                  <ListItemText primary="Admin" />
+                  {collapse ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={collapse} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/dumps">
+                    <ListItemText primary="Décharges" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/events">
+                    <ListItemText primary="Evènements" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/users">
+                    <ListItemText primary="Utilisateurs" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/equipments">
+                    <ListItemText primary="Equipements" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/invites">
+                    <ListItemText primary="Invitations" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/notifications">
+                    <ListItemText primary="Notifications" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+
+            </>
+            )}
           </List>
         </Drawer>
       </Box>

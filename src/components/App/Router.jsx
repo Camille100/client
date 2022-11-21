@@ -21,17 +21,9 @@ const styles = {
   `,
 };
 
-// const PrivateRoute = ({ children }) => {
-//   // const isUserAuthenticated = localStorage.getItem('auth');
-//   const isUserAuthenticated = useSelector((state) => state.user.loggedIn);
-//   return isUserAuthenticated ? children : <Navigate to="/login" />;
-// };
-
 const Router = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user.loggedIn) {
@@ -41,12 +33,9 @@ const Router = () => {
         getUser({ userId: userId.id }).then((res) => {
           if (res.status === 200) {
             dispatch(loginUser(res.data));
-            setIsUserAuthenticated(true);
           }
         });
       }
-    } else {
-      setIsUserAuthenticated(true);
     }
   }, [user]);
 
