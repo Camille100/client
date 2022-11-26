@@ -63,9 +63,9 @@ export const calculateLvl = (xp) => {
     xpObj.xpToLevelUp = (3850 - xp);
     return xpObj;
   }
-  if (xp >= 3850 && xp < 5200) {
+  if (xp >= 3850) {
     xpObj.level = 10;
-    xpObj.xpToLevelUp = (5200 - xp);
+    xpObj.xpToLevelUp = 0;
     return xpObj;
   }
   return xpObj;
