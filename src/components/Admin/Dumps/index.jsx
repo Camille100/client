@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-unused-vars */
@@ -14,10 +15,23 @@ import {
   Box,
   CircularProgress,
   Typography,
+  List,
+  ListItem,
+  Divider,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  Table,
+  TableContainer,
+  Paper,
+  Alert,
+  Button,
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { getDumps, updateDump, deleteDump } from '../../../services/dumpServices';
 import Warning from '../ReusableComponents/Warning';
+import Gallery from './components/Gallery';
 
 const AdminDump = () => {
   const [data, setData] = useState([]);
@@ -43,21 +57,21 @@ const AdminDump = () => {
       accessorKey: 'equipments',
       header: 'Equipements',
       accessorFn: (row) => (
-        <div style={{ display: 'flex', fexDirection: 'column', alignItems: 'flex-start' }}>
+        <List>
           {row.equipments.map((equipment) => (
-            <Typography variant="subtitle">{equipment.name}</Typography>
+            <ListItem>{equipment.name}</ListItem>
           ))}
-        </div>
+        </List>
       ),
     },
     {
       accessorKey: 'accessible',
       header: 'Accessibilité',
       accessorFn: (row) => (
-        <div style={{ display: 'flex', fexDirection: 'column', alignItems: 'flex-start' }}>
-          {row.accessible.onFoot && <Typography variant="subtitle">Accessible à pieds</Typography>}
-          {row.accessible.onCar && <Typography variant="subtitle">Accessible en voiture</Typography>}
-        </div>
+        <List style={{ display: 'flex', fexDirection: 'column', alignItems: 'flex-start' }}>
+          {row.accessible.onFoot && <ListItem variant="subtitle">Accessible à pieds</ListItem>}
+          {row.accessible.onCar && <ListItem variant="subtitle">Accessible en voiture</ListItem>}
+        </List>
       ),
     },
     {
@@ -67,11 +81,10 @@ const AdminDump = () => {
     {
       accessorKey: 'pictures',
       header: 'Images',
+      size: 300,
       accessorFn: (row) => (
-        <div style={{ display: 'flex', fexDirection: 'column', alignItems: 'flex-start' }}>
-          {row.pictures.map((url, index) => (
-            <img src={url} alt={`décharge ${index}`} style={{ height: '30px', width: '30px' }} />
-          ))}
+        <div style={{ paddingLeft: '20px' }}>
+          <Gallery pictures={row.pictures} height="200px" width="200px" />
         </div>
       ),
     },
@@ -132,7 +145,56 @@ const AdminDump = () => {
           editingMode="modal" // default
           enableColumnOrdering
           enableEditing
+          enableHiding
+          initialState={{
+            columnVisibility: {
+              accessible: false, equipments: false, created_at: false, updated_at: false,
+            },
+          }}
           onEditingRowSave={handleSaveRowEdits}
+          renderDetailPanel={({ row }) => (
+            <TableContainer component={Paper} sx={{ width: '100%', maxWidth: '1000px' }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Nettoyeur ID
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Photos
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Statut
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.original.cleaningDemands && row.original.cleaningDemands.length > 0
+                    ? row.original.cleaningDemands.map((demand) => (
+                      <TableRow>
+                        <TableCell>
+                          {demand.cleaner}
+                        </TableCell>
+                        <TableCell>
+                          <Gallery pictures={demand.pictures} height="200px" width="200px" />
+                        </TableCell>
+                        <TableCell>
+                          {demand.status === 'waiting' && <Alert severity="warning">En attente</Alert>}
+                          {demand.status === 'accepted' && <Alert severity="success">Accepté</Alert>}
+                          {demand.status === 'refused' && <Alert severity="error">Refusé</Alert>}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                    : (
+                      <>
+                        <Typography>Pas de demandes de nettoyage</Typography>
+                        <Divider />
+                      </>
+                    )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip arrow placement="left" title="Edit">

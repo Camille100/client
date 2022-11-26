@@ -18,12 +18,14 @@ import {
   Tooltip,
   Divider,
   CardHeader,
+  Box,
 } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import { css, jsx } from '@emotion/react';
 import { getDump } from '../../services/dumpServices';
 import { formatDate } from '../../utils/utils';
 import CleaningForm from './components/CleaningForm';
+import Gallery from '../Admin/Dumps/components/Gallery';
 
 const styles = {
   dumpInfos: css`
@@ -80,25 +82,24 @@ const Dump = () => {
   if (dump && dump.accessible) {
     return (
       <>
-        <Card sx={{ minWidth: 275, marginTop: '30px', marginBottom: '40px' }}>
+        <Card sx={{
+          minWidth: 275, marginTop: '30px', marginBottom: '40px', padding: '20px',
+        }}
+        >
           <CardHeader title="Informations" subheader={`décharge créée le: ${formatDate(dump.created_at)}`} />
           <CardContent>
-            <ImageList
-              sx={{ minWidth: '500px', marginBottom: '30px', alignSelf: 'center' }}
-              variant="quilted"
-              cols={3}
-              rowHeight={121}
-            >
-              {dump.pictures.map((item, index) => (
-                <ImageListItem key={`img-${index + 1}`} cols={item.cols || 1} rows={item.rows || 1}>
-                  <img
-                    {...srcset(item, 121, item.rows, item.cols)}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                </ImageListItem>
-              ))}
-            </ImageList>
+            <Box sx={{ height: '400px' }}>
+              <Typography sx={{
+                display: 'flex', flexDirection: 'row', fontSize: '12px', color: '#7D7D7D',
+              }}
+              >
+                Statut:
+                <Typography sx={{ fontSize: '12px', marginLeft: '5px' }}>
+                  {dump.status === 'open' ? 'Ouverte' : 'En attente'}
+                </Typography>
+              </Typography>
+              <Gallery pictures={dump.pictures} height="auto" width="500px" />
+            </Box>
             <Divider variant="middle" />
             <div css={styles.dumpInfos}>
               <div css={styles.section}>
@@ -125,6 +126,8 @@ const Dump = () => {
             </div>
           </CardContent>
           <CardActions sx={styles.buttons}>
+            {dump.status === 'open'
+            && (
             <Button
               size="medium"
               variant="contained"
@@ -133,6 +136,16 @@ const Dump = () => {
             >
               Nettoyer la décharge
             </Button>
+            )}
+            {dump.status === 'waiting'
+            && (
+            <Typography
+              variant="body1"
+              sx={styles.text}
+            >
+              En cours de nettoyage...
+            </Typography>
+            )}
             <Tooltip title="signaler la décharge" placement="top-end">
               <IconButton size="small" variant="contained" sx={styles.button}>
                 <HelpIcon color="neutral" />
