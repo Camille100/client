@@ -192,6 +192,8 @@ const Layout = () => {
                   <div>
                     <MenuItem
                       component={Link}
+                      to="/myaccount"
+                      onClick={handleClose}
                       // onClick={() => handleLogout()}
                     >
                       <Person
@@ -301,6 +303,9 @@ const Layout = () => {
               </ListItem>
               <Collapse in={collapse} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/dumps/validatecleaning">
+                    <ListItemText primary="Valider nettoyages" />
+                  </ListItemButton>
                   <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/dumps">
                     <ListItemText primary="Décharges" />
                   </ListItemButton>
