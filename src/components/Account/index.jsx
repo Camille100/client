@@ -144,10 +144,11 @@ const Account = () => {
                 {disabled.pseudo
                   ? (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleEdit('pseudo')}
                     >
                       Modifier
@@ -155,10 +156,11 @@ const Account = () => {
                   )
                   : (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleForm('pseudo')}
                     >
                       Enregistrer
@@ -178,10 +180,11 @@ const Account = () => {
                 {disabled.email
                   ? (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleEdit('email')}
                     >
                       Modifier
@@ -189,10 +192,11 @@ const Account = () => {
                   )
                   : (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleForm('email')}
                     >
                       Enregistrer
@@ -213,10 +217,11 @@ const Account = () => {
                 {disabled.password
                   ? (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleEdit('password')}
                     >
                       Modifier
@@ -224,10 +229,11 @@ const Account = () => {
                   )
                   : (
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       size="small"
                       sx={styles.button}
+                      disableElevation
                       onClick={() => handleForm('password')}
                     >
                       Enregistrer
