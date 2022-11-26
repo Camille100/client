@@ -16,6 +16,7 @@ import Account from '../Account';
 import Dump from '../Dump';
 import Event from '../Event';
 import DumpHistory from '../DumpHistory';
+import EventHistory from '../EventHistory';
 import AdminDumps from '../Admin/Dumps';
 import AdminValidateCleaning from '../Admin/ValidateCleaning';
 import AdminEvents from '../Admin/Events';
@@ -77,6 +78,14 @@ const RoutesWrapper = () => (
         element={(
           <PrivateRoute>
             <DumpHistory />
+          </PrivateRoute>
+                )}
+      />
+      <Route
+        path="/events"
+        element={(
+          <PrivateRoute>
+            <EventHistory />
           </PrivateRoute>
                 )}
       />

@@ -38,7 +38,7 @@ const CleanedDumps = ({ dumps }) => (
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Informations" subheader={`décharge créée le: ${formatDate(dump.created_at)}`} />
-            <CardContent>
+            <CardContent sx={{ minWidth: '724px' }}>
               <div css={styles.dumpInfos}>
                 <div css={styles.section}>
                   <Typography variant="subtitle2" sx={styles.title}>Description:</Typography>
@@ -69,10 +69,8 @@ const CleanedDumps = ({ dumps }) => (
       : (
         <Grid item xs={12}>
           <Card>
-            <CardContent>
-              <Typography
-                sx={{ minWidth: '724px' }}
-              >
+            <CardContent sx={{ minWidth: '724px' }}>
+              <Typography>
                 Vous n&apos;avez nettoyé aucune décharge
               </Typography>
             </CardContent>

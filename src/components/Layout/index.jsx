@@ -258,7 +258,7 @@ const Layout = () => {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={handleDrawer} component={Link} to="/blocked">
+              <ListItemButton onClick={handleDrawer} component={Link} to="/events">
                 <ListItemIcon>
                   <Event />
                 </ListItemIcon>

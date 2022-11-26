@@ -12,11 +12,11 @@ import { css, jsx } from '@emotion/react';
 import { formatDate } from '../../../utils/utils';
 
 const styles = {
-  dumpInfos: css`
+  eventInfos: css`
    margin-top: 30px;
   `,
   title: css`
-    font-size: 18px;
+  font-size: 18px;
     margin-bottom: 10px;
     color: #5c5c5c;
   `,
@@ -31,27 +31,27 @@ const styles = {
   `,
 };
 
-const SignaledDumps = ({ dumps }) => (
+const DeclaredEvents = ({ events }) => (
   <Grid container spacing={2}>
-    {dumps.length > 0
-      ? dumps.map((dump) => (
+    {events.length > 0
+      ? events.map((event) => (
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Informations" subheader={`décharge créée le: ${formatDate(dump.created_at)}`} />
+            <CardHeader title="Informations" subheader={`évènement créé le: ${formatDate(event.created_at)}`} />
             <CardContent sx={{ minWidth: '724px' }}>
-              <div css={styles.dumpInfos}>
+              <div css={styles.eventInfos}>
                 <div css={styles.section}>
                   <Typography variant="subtitle2" sx={styles.title}>Description:</Typography>
-                  <Typography variant="body2" sx={styles.text}>{dump.comment}</Typography>
+                  <Typography variant="body2" sx={styles.text}>{event.comment}</Typography>
                 </div>
                 <div css={styles.section}>
-                  <Typography variant="subtitle2" sx={styles.title}>Décharge accessible:</Typography>
-                  {dump.accessible.onCar && <Typography variant="body2" sx={styles.text}>En voiture</Typography>}
-                  {dump.accessible.onFoot && <Typography variant="body2" sx={styles.text}>A pied</Typography>}
+                  <Typography variant="subtitle2" sx={styles.title}>Evènement accessible:</Typography>
+                  {event.accessible.onCar && <Typography variant="body2" sx={styles.text}>En voiture</Typography>}
+                  {event.accessible.onFoot && <Typography variant="body2" sx={styles.text}>A pied</Typography>}
                 </div>
                 <div css={styles.section}>
                   <Typography variant="subtitle2" sx={styles.title}>Equipements nécessaires au nettoyage: </Typography>
-                  {dump.equipments.map((equipment, index) => (
+                  {event.equipments.map((equipment, index) => (
                     <Typography
                       variant="body2"
                       key={`equipment-${index + 1}`}
@@ -71,7 +71,7 @@ const SignaledDumps = ({ dumps }) => (
           <Card>
             <CardContent sx={{ minWidth: '724px' }}>
               <Typography>
-                Vous n&apos;avez déclaré aucune décharge
+                Vous n&apos;avez organisé aucun évènement
               </Typography>
             </CardContent>
           </Card>
@@ -80,4 +80,4 @@ const SignaledDumps = ({ dumps }) => (
   </Grid>
 );
 
-export default SignaledDumps;
+export default DeclaredEvents;
