@@ -28,7 +28,18 @@ export const userSlice = createSlice({
     updateUser: (state, action) => {
 
     },
+    addXp: (state, action) => {
+      const newXp = state.xp + action.payload.xp;
+      state.xp = newXp;
+      state.level = calculateLvl(newXp);
+      return state;
+    },
   },
 });
 
-export const { loginUser, logoutUser } = userSlice.actions;
+export const {
+  loginUser,
+  logoutUser,
+  addXp,
+  update,
+} = userSlice.actions;

@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getEquipments } from '../../../services/equipmentServices';
 import { addDump } from '../../../services/dumpServices';
 import { openToast } from '../../../redux/slices/toastSlice';
+import { addXp } from '../../../redux/slices/userSlice';
 
 const DumpForm = ({ open, setOpen, coordinates }) => {
   const [allEquipments, setAllEquipments] = useState([]);
@@ -49,8 +50,6 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
             });
           });
           setAllEquipments(formattedData);
-        } else {
-          dispatch(openToast({ message: 'Récupération des équipements échouée', severity: 'error' }));
         }
       });
     }
@@ -100,6 +99,7 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
     addDump(dumpObj).then((res) => {
       if (res.status === 201) {
         handleClose();
+        dispatch(addXp(50));
         return dispatch(openToast({ message: 'Décharge ajoutée avec succès', severity: 'success' }));
       }
       handleClose();

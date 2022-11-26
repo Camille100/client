@@ -35,6 +35,20 @@ const theme = createTheme({
         root: {
           fontWeight: 'bold',
         },
+        disabled: {
+          borderBottom: '0px',
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          '&.MuiInput-root.Mui-disabled': {
+            ':before': {
+              borderBottomStyle: 'none',
+            },
+          },
+        },
       },
     },
   },

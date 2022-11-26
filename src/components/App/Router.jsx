@@ -26,17 +26,17 @@ const Router = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // if (!user.loggedIn) {
-    if (localStorage.getItem('auth')) {
-      const userAuth = JSON.parse(localStorage.getItem('auth'));
-      const userId = jwtDecode(userAuth);
-      getUser({ userId: userId.id }).then((res) => {
-        if (res.status === 200) {
-          dispatch(loginUser(res.data));
-        }
-      });
+    if (!user.loggedIn) {
+      if (localStorage.getItem('auth')) {
+        const userAuth = JSON.parse(localStorage.getItem('auth'));
+        const userId = jwtDecode(userAuth);
+        getUser({ userId: userId.id }).then((res) => {
+          if (res.status === 200) {
+            dispatch(loginUser(res.data));
+          }
+        });
+      }
     }
-    // }
   }, [user]);
 
   // console.log(user);
