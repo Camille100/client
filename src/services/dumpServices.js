@@ -27,3 +27,7 @@ export const getDumpsByUser = (userId) => instance.get(`/dump/dumps/${userId}`)
 export const addDumpCleaner = (body) => instance.put('/dump/add/cleaning', body)
   .then((response) => response)
   .catch((error) => error);
+
+export const updateCleaningDemand = (cleaningDemandId, body) => instance.put(`/dump/update/cleaning/${cleaningDemandId}`, body)
+  .then((response) => response)
+  .catch((error) => error);
