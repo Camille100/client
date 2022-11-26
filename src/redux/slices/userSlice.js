@@ -3,6 +3,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
+import { calculateLvl } from '../../utils/utils';
 
 export const userSlice = createSlice({
   name: 'user',
@@ -15,6 +16,9 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.pseudo = action.payload.pseudo || '';
       state.role = action.payload.role;
+      state.xp = action.payload.xp;
+      state.avatar = action.payload.avatar;
+      state.level = calculateLvl(action.payload.xp);
       state.loggedIn = true;
       return state;
     },
