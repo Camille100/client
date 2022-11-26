@@ -11,11 +11,13 @@ import Home from '../Home';
 import NoMatch from '../NoMatch';
 import Login from '../Login';
 import Register from '../Register';
-import Blocked from '../Blocked';
+import Account from '../Account';
+// import Blocked from '../Blocked';
 import Dump from '../Dump';
 import Event from '../Event';
 import DumpHistory from '../DumpHistory';
 import AdminDumps from '../Admin/Dumps';
+import AdminValidateCleaning from '../Admin/ValidateCleaning';
 import AdminEvents from '../Admin/Events';
 import AdminEquipments from '../Admin/Equipments';
 import AdminInvites from '../Admin/Invites';
@@ -47,10 +49,10 @@ const RoutesWrapper = () => (
         element={<Register />}
       />
       <Route
-        path="/blocked"
+        path="/myaccount"
         element={(
           <PrivateRoute>
-            <Blocked />
+            <Account />
           </PrivateRoute>
                 )}
       />
@@ -83,6 +85,14 @@ const RoutesWrapper = () => (
         element={(
           <PrivateRouteAdmin>
             <AdminDumps />
+          </PrivateRouteAdmin>
+                )}
+      />
+      <Route
+        path="/admin/dumps/validatecleaning"
+        element={(
+          <PrivateRouteAdmin>
+            <AdminValidateCleaning />
           </PrivateRouteAdmin>
                 )}
       />
