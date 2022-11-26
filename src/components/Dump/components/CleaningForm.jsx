@@ -60,6 +60,7 @@ const CleaningForm = ({ open, setOpen, dumpId }) => {
             fromSources: ['local_file_system'],
             maxFiles: 5,
             accept: 'image/*',
+            imageDim: [800, null],
             customText: {
               'File {displayName} is not an accepted file type. The accepted file types are {types}': 'File {displayName} is not an accepted file type. The accepted file types are .jpeg, .jpg, .png',
             },
