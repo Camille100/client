@@ -62,7 +62,8 @@ const CleaningForm = ({ open, setOpen, dumpId }) => {
             accept: 'image/*',
             imageDim: [800, null],
             customText: {
-              'File {displayName} is not an accepted file type. The accepted file types are {types}': 'File {displayName} is not an accepted file type. The accepted file types are .jpeg, .jpg, .png',
+              'File {displayName} is not an accepted file type. The accepted file types are {types}':
+              'Les fichiers de type {displayName} ne sont pas acceptés. les types acceptés sont .jpeg, .jpg, .png',
             },
           }}
           onUploadDone={(res) => {
