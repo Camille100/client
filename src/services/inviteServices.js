@@ -4,6 +4,10 @@ export const getInvites = () => instance.get('/invite/invites')
   .then((response) => response)
   .catch((error) => error);
 
+export const getInvitesByUser = (userId) => instance.get(`/invite/invites/${userId}`)
+  .then((response) => response)
+  .catch((error) => error);
+
 export const getInvite = (inviteId) => instance.get(`/invite/${inviteId}`)
   .then((response) => response)
   .catch((error) => error);
