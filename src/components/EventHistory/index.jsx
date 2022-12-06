@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import DeclaredEvents from './components/DeclaredEvents';
 import SubscribedEvents from './components/SubscribedEvents';
+import Invites from './components/Invites';
 import { getEventsByUser } from '../../services/eventServices';
 import { openToast } from '../../redux/slices/toastSlice';
 
@@ -69,23 +70,29 @@ const DumpHistory = () => {
     setValue(newValue);
   };
   return (
-    <Card>
+    <Card sx={{ marginTop: '50px', width: '90vw' }}>
       <Tabs
         orientation="horizontal"
         variant="scrollable"
         value={value}
+        scrollButtons
+        allowScrollButtonsMobile
         onChange={handleChange}
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
         <Tab label="Evènements organisés" {...a11yProps(0)} />
         <Tab label="Participation évènements" {...a11yProps(1)} />
+        <Tab label="Invitations évènements" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <DeclaredEvents userId={user.userId} events={declaredEvents} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <SubscribedEvents userId={user.userId} events={subscribedEvents} />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Invites userId={user.userId} />
       </TabPanel>
     </Card>
   );
