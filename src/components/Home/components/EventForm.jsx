@@ -1,8 +1,10 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogTitle,
@@ -29,18 +31,17 @@ import { getEquipments } from '../../../services/equipmentServices';
 import { addEvent } from '../../../services/eventServices';
 import { openToast } from '../../../redux/slices/toastSlice';
 
-const EventForm = ({ coordinates, open, setOpen }) => {
+const EventForm = ({
+  coordinates, open, setOpen, event,
+}) => {
   const [allEquipments, setAllEquipments] = useState([]);
-  const [equipmentList, setEquipmentList] = useState([]);
-  const [beginDate, setBeginDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [comment, setComment] = useState('');
-  const [checked, setChecked] = useState({
-    onFoot: false,
-    onCar: false,
-  });
-  const [status, setStatus] = useState('public');
-  const [radius, setRadius] = useState(0);
+  const [equipmentList, setEquipmentList] = useState([...event.equipments]);
+  const [beginDate, setBeginDate] = useState(event.beginDate);
+  const [endDate, setEndDate] = useState(event.endDate);
+  const [comment, setComment] = useState(event.comment);
+  const [checked, setChecked] = useState(event.accessible);
+  const [status, setStatus] = useState(event.status);
+  const [radius, setRadius] = useState(event.radius || 0);
   const [polygon, setPolygon] = useState({});
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -58,6 +59,17 @@ const EventForm = ({ coordinates, open, setOpen }) => {
             });
           });
           setAllEquipments(formattedData);
+          if (event.equipments.length > 0) {
+            const equipments = [];
+            event.equipments.forEach((equipment) => {
+              equipments.push({
+                id: equipment._id,
+                label: equipment.name,
+                value: equipment.name,
+              });
+            });
+            setEquipmentList(equipments);
+          }
         } else {
           dispatch(openToast({ message: 'Récupération des équipements échouée', severity: 'error' }));
         }
@@ -125,13 +137,14 @@ const EventForm = ({ coordinates, open, setOpen }) => {
       accessible: checked,
     };
     addEvent(eventObj).then((res) => {
-      if (res.status === 200) {
+      console.log(res);
+      if (res.status === 201) {
         dispatch(openToast({ message: 'Evènement enregistré avec succès', severity: 'success' }));
         handleClose();
-        return;
+      } else {
+        dispatch(openToast({ message: 'Echec de l\'enregistrement de l\'évènement', severity: 'error' }));
+        handleClose();
       }
-      dispatch(openToast({ message: 'Echec de l&apos;enregistrement de l&apos;évènement', severity: 'error' }));
-      handleClose();
     });
   };
 
@@ -233,6 +246,24 @@ const EventForm = ({ coordinates, open, setOpen }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+EventForm.defaultProps = {
+  event: {
+    equipments: [],
+    beginDate: new Date(),
+    endDate: new Date(),
+    comment: '',
+    accessible: {
+      onFoot: false,
+      onCar: false,
+    },
+    status: 'public',
+  },
+};
+
+EventForm.propTypes = {
+  event: PropTypes.object,
 };
 
 export default EventForm;
