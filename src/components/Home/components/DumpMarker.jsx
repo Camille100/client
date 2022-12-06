@@ -25,11 +25,16 @@ const styles = {
     flex-direction: column;
   `,
   title: css`
+    font-size: 12px;
+    font-weight: bold;
     margin-bottom: 5px;
+    color: #5c5c5c;
   `,
   text: css`
+    font-size: 12px;
     margin-bottom: 5px;
-    margin-left: 5px;
+    color: #6d6d6d;
+    text-align: justify;
   `,
   section: css`
     margin-bottom: 15px;

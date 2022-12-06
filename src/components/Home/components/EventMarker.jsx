@@ -18,6 +18,7 @@ import {
 import { css, jsx } from '@emotion/react';
 import { Source, Layer, Marker } from 'react-map-gl';
 import PlaceIcon from '@mui/icons-material/Place';
+import { truncateString } from '../../../utils/utils';
 
 const styles = {
   card: css`
@@ -25,11 +26,16 @@ const styles = {
     flex-direction: column;
   `,
   title: css`
+    font-size: 12px;
+    font-weight: bold;
     margin-bottom: 5px;
+    color: #5c5c5c;
   `,
   text: css`
+    font-size: 12px;
     margin-bottom: 5px;
-    margin-left: 5px;
+    color: #6d6d6d;
+    text-align: justify;
   `,
   section: css`
     margin-bottom: 15px;
@@ -60,7 +66,13 @@ const EventMarker = ({ event, index }) => {
   const geojson = {
     type: 'FeatureCollection',
     features: [
-      { type: 'Feature', geometry: { type: event.location.type, coordinates: event.location.coordinates } },
+      {
+        type: 'Feature',
+        geometry: {
+          type: event.location.type,
+          coordinates: event.location.coordinates,
+        },
+      },
     ],
   };
   return (
@@ -88,11 +100,11 @@ const EventMarker = ({ event, index }) => {
           }}
           sx={styles.card}
         >
-          <CardContent sx={{ height: '100%', width: '100%' }}>
+          <CardContent sx={{ height: '100%', width: '100%', maxWidth: '300px' }}>
             <div>
               <div css={styles.section}>
                 <Typography variant="subtitle2" sx={styles.title}>Description:</Typography>
-                <Typography variant="body2" sx={styles.text}>{event.comment}</Typography>
+                <Typography variant="body2" sx={styles.text}>{truncateString(event.comment, 150)}</Typography>
               </div>
               <div css={styles.section}>
                 <Typography variant="subtitle2" sx={styles.title}>Evènement accessible:</Typography>

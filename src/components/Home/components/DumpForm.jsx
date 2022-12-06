@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
@@ -16,6 +17,7 @@ import {
   FormControlLabel,
   FormGroup,
   Checkbox,
+  Grid,
 } from '@mui/material';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,6 +58,7 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
   }, []);
 
   const handleClose = () => {
+    setUploadedFiles([]);
     setOpen(false);
   };
 
@@ -103,7 +106,7 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
         return dispatch(openToast({ message: 'Décharge ajoutée avec succès', severity: 'success' }));
       }
       handleClose();
-      return dispatch(openToast({ message: 'Erreur lors de l&apos;ajout de la décharge', severity: 'error' }));
+      return dispatch(openToast({ message: 'Erreur lors de l\'ajout de la décharge', severity: 'error' }));
     });
   };
 
@@ -114,69 +117,79 @@ const DumpForm = ({ open, setOpen, coordinates }) => {
           <>
             <DialogTitle>Enregistrement d&apos;une décharge</DialogTitle>
             <DialogContent ref={myRef}>
-              <DialogContentText>
-                Veuillez ajouter une description de la décharge:
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="description"
-                label="Description"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={comment}
-                onChange={handleComment}
-              />
-              <DialogContentText sx={{ marginTop: '15px', marginBottom: '10px' }}>
-                Cette décharge est accessible:
-              </DialogContentText>
-              <FormGroup>
-                <FormControlLabel control={<Checkbox value="onCar" checked={checked.onCar} onChange={() => handleCheckbox('onCar')} />} label="En voiture" />
-                <FormControlLabel control={<Checkbox value="onFoot" checked={checked.onFoot} onChange={() => handleCheckbox('onFoot')} />} label="A pieds" />
-              </FormGroup>
-              <DialogContentText sx={{ marginTop: '15px', marginBottom: '10px' }}>
-                Informez les autres utilisateurs du matériel nécessaire au nettoyage de la décharge:
-              </DialogContentText>
-              <Select
-                isMulti
-                name="equipments"
-                options={allEquipments}
-                value={equipmentList}
-                onChange={handleSelect}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                menuPortalTarget={document.body}
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-              />
-              <PickerInline
-                apikey={process.env.REACT_APP_FILE_STACK_KEY}
-                pickerOptions={{
-                  fromSources: ['local_file_system'],
-                  maxFiles: 5,
-                  accept: 'image/*',
-                  imageDim: [800, null],
-                  customText: {
-                    'File {displayName} is not an accepted file type. The accepted file types are {types}': 'File {displayName} is not an accepted file type. The accepted file types are .jpeg, .jpg, .png',
-                  },
-                }}
-                onUploadDone={(res) => {
-                  const uploadedFilesArr = [];
-                  res.filesUploaded.forEach((file) => {
-                    uploadedFilesArr.push(file.url);
-                  });
-                  setUploadedFiles([...uploadedFiles, ...uploadedFilesArr]);
-                }}
-              >
-                <div
-                  style={{
-                    marginTop: '20px',
-                    height: '30px',
-                    width: '100%',
-                    zIndex: '0',
-                  }}
-                />
-              </PickerInline>
+              <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+                <Grid item xs={4} sm={8} md={12}>
+                  <DialogContentText>
+                    Veuillez ajouter une description de la décharge:
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="description"
+                    label="Description"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={comment}
+                    onChange={handleComment}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={8} md={12}>
+                  <DialogContentText sx={{ marginTop: '15px', marginBottom: '10px' }}>
+                    Cette décharge est accessible:
+                  </DialogContentText>
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox value="onCar" checked={checked.onCar} onChange={() => handleCheckbox('onCar')} />} label="En voiture" />
+                    <FormControlLabel control={<Checkbox value="onFoot" checked={checked.onFoot} onChange={() => handleCheckbox('onFoot')} />} label="A pieds" />
+                  </FormGroup>
+                </Grid>
+                <Grid item xs={4} sm={8} md={12}>
+                  <DialogContentText sx={{ marginTop: '15px', marginBottom: '10px' }}>
+                    Informez les autres utilisateurs du matériel nécessaire au nettoyage de la décharge:
+                  </DialogContentText>
+                  <Select
+                    isMulti
+                    name="equipments"
+                    options={allEquipments}
+                    value={equipmentList}
+                    onChange={handleSelect}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    menuPortalTarget={document.body}
+                    styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={8} md={12}>
+                  <PickerInline
+                    apikey={process.env.REACT_APP_FILE_STACK_KEY}
+                    pickerOptions={{
+                      fromSources: ['local_file_system'],
+                      maxFiles: 5,
+                      accept: 'image/*',
+                      imageDim: [800, null],
+                      customText: {
+                        'File {displayName} is not an accepted file type. The accepted file types are {types}': 'Les fichiers {displayName} ne sont pas acceptés. Les extensions acceptée sont: .jpeg, .jpg, .png',
+                      },
+                    }}
+                    onUploadDone={(res) => {
+                      const uploadedFilesArr = [];
+                      res.filesUploaded.forEach((file) => {
+                        uploadedFilesArr.push(file.url);
+                      });
+                      setUploadedFiles([...uploadedFiles, ...uploadedFilesArr]);
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginTop: '20px',
+                        height: '30px',
+                        width: '100%',
+                        zIndex: '0',
+                      }}
+                    />
+                  </PickerInline>
+                </Grid>
+              </Grid>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Fermer</Button>
