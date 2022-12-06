@@ -4,6 +4,10 @@ export const getNotifications = () => instance.get('/notification/notifications'
   .then((response) => response)
   .catch((error) => error);
 
+export const getNotificationsByUser = (userId) => instance.get(`/notification/notifications/${userId}`)
+  .then((response) => response)
+  .catch((error) => error);
+
 export const getNotification = (notificationId) => instance.get(`/notification/${notificationId}`)
   .then((response) => response)
   .catch((error) => error);

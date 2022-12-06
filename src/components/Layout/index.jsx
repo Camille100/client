@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
@@ -19,6 +21,8 @@ import {
   Menu,
   MenuItem,
   Collapse,
+  Badge,
+  Popover,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import {
@@ -38,12 +42,14 @@ import {
   ExpandLess,
   ExpandMore,
   AdminPanelSettings,
+  Notifications,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../logo_small_black.png';
 import { logoutUser } from '../../redux/slices/userSlice';
 import { logout } from '../../services/authServices';
+import { getNotificationsByUser, updateNotification } from '../../services/notificationServices';
 
 const drawerWidth = 240;
 
@@ -85,10 +91,27 @@ const Layout = () => {
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorNotif, setAnchorNotif] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const openNotif = Boolean(anchorNotif);
   const openMenu = Boolean(anchorEl);
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getNotificationsByUser(userState.userId).then((res) => {
+      if (res.status === 200) {
+        const notifArr = [];
+        res.data.forEach((notif) => {
+          if (notif.seen === false) {
+            notifArr.push(notif);
+          }
+        });
+        setNotifications(notifArr);
+      }
+    });
+  }, [userState]);
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -105,6 +128,9 @@ const Layout = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleCloseNotif = () => {
+    setAnchorNotif(null);
+  };
 
   const handleLogout = () => {
     logout().then((res) => {
@@ -116,6 +142,19 @@ const Layout = () => {
       }
     });
   };
+
+  const handleNotifications = (e) => {
+    setAnchorNotif(e.currentTarget);
+  };
+
+  const handleNotificationsStatus = (notificationId) => {
+    updateNotification(notificationId, { seen: true }).then(() => {
+      const notifArr = [...notifications];
+      const newNotifArr = notifArr.filter((notif) => notif._id.toString() !== notificationId.toString());
+      setNotifications(newNotifArr);
+    });
+  };
+
   return (
     <>
       <Box sx={styles.container}>
@@ -149,6 +188,40 @@ const Layout = () => {
                 />
               </Typography>
             </div>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleNotifications}
+              edge="end"
+              sx={{ justifySelf: 'end', marginRight: '10px' }}
+            >
+              <Badge badgeContent={notifications.length} color="primary">
+                <Notifications />
+              </Badge>
+            </IconButton>
+            <Popover
+              // id={id}
+              open={openNotif}
+              anchorEl={anchorNotif}
+              onClose={handleCloseNotif}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <List>
+                {notifications && notifications.length > 0
+                  ? notifications.map((notification, indexNotif) => (
+                    <ListItem
+                      key={`notification-${indexNotif + 1}`}
+                      onMouseEnter={() => handleNotificationsStatus(notification._id)}
+                    >
+                      {notification.content}
+                    </ListItem>
+                  ))
+                  : <ListItem>Pas de notifications en attente</ListItem>}
+              </List>
+            </Popover>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -246,7 +319,7 @@ const Layout = () => {
                 <ListItemIcon>
                   <Home />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <ListItemText primary="Accueil" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
@@ -268,25 +341,25 @@ const Layout = () => {
             <ListItem disablePadding>
               <ListItemButton onClick={handleDrawer} component={Link} to="/">
                 <ListItemIcon>
-                  <Call />
-                </ListItemIcon>
-                <ListItemText primary="Contact" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleDrawer} component={Link} to="/">
-                <ListItemIcon>
                   <Info />
                 </ListItemIcon>
                 <ListItemText primary="A propos" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={handleDrawer} component={Link} to="/">
+              <ListItemButton onClick={handleDrawer} component={Link} to="/assistance">
                 <ListItemIcon>
                   <ContactSupport />
                 </ListItemIcon>
                 <ListItemText primary="Assistance" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleDrawer} component={Link} to="/">
+                <ListItemIcon>
+                  <Call />
+                </ListItemIcon>
+                <ListItemText primary="Contact" />
               </ListItemButton>
             </ListItem>
             {userState.loggedIn && userState.role === 'admin'
