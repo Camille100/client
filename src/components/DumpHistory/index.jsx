@@ -69,11 +69,13 @@ const DumpHistory = () => {
     setValue(newValue);
   };
   return (
-    <Card>
+    <Card sx={{ marginTop: '50px', width: '90vw' }}>
       <Tabs
         orientation="horizontal"
         variant="scrollable"
         value={value}
+        scrollButtons
+        allowScrollButtonsMobile
         onChange={handleChange}
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider' }}
