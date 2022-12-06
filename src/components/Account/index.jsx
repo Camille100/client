@@ -79,7 +79,7 @@ const Account = () => {
   const dispatch = useDispatch();
   const [disabled, setDisabled] = useState({
     pseudo: true,
-    mail: true,
+    email: true,
     password: true,
   });
   const [pseudo, setPseudo] = useState(user.pseudo);
