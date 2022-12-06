@@ -60,6 +60,9 @@ const Login = () => {
     justfy-content: center;
     height: 100%;
     width: 30%;
+    @media (max-width: 420px) {
+      display: none;
+    }
     `,
     logo: css`
     height: 100%;
@@ -75,6 +78,15 @@ const Login = () => {
     height: 100%;
     margin: 0;
     padding: 20px;
+    @media (max-width: 420px) {
+      width: 100%;
+      padding: 20px 0px 20px 0px;
+    }
+    `,
+    divider: css`
+    @media (max-width: 420px) {
+      display: none;
+    }
     `,
     formContainer: css`
     display: flex;
@@ -93,6 +105,11 @@ const Login = () => {
     align-items: center;
     width: 100%;
     margin-bottom: 30px;
+    `,
+    titleText: css`
+    @media (max-width: 420px) {
+      font-size: 20px;
+    }
     `,
     logoText: css`
     height: 100%;
@@ -130,11 +147,11 @@ const Login = () => {
       <Container sx={styles.logoContainer}>
         <img css={styles.logo} src={logo} alt="" />
       </Container>
-      <Divider orientation="vertical" flexItem />
+      <Divider orientation="vertical" flexItem sx={styles.divider} />
       <Container sx={styles.containerRight}>
         <Container sx={styles.formContainer}>
           <div css={styles.title}>
-            <Typography variant="h5">Se connecter</Typography>
+            <Typography variant="h5" sx={styles.titleText}>Se connecter</Typography>
             <img css={styles.logoText} src={logoText} alt="" />
           </div>
           <FormControl sx={styles.form} variant="outlined">
