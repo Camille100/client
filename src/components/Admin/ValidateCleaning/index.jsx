@@ -39,8 +39,8 @@ const ValidateCleaning = () => {
   const handleCleaningDemand = (e, status, demandObj) => {
     updateCleaningDemand(demandObj.demandId, { status, cleanerId: demandObj.cleanerId })
       .then((res) => {
-        getCleaningDemands();
         if (res.status === 200) {
+          getCleaningDemands();
           dispatch(openToast({ message: 'Demande traitée avec succès', severity: 'success' }));
           return;
         }
@@ -62,7 +62,7 @@ const ValidateCleaning = () => {
       header: 'Photos',
       size: 300,
       accessorFn: (row) => (
-        <div style={{ paddingLeft: '20px' }}>
+        <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
           <Gallery pictures={row.pictures} />
         </div>
       ),
