@@ -9,6 +9,9 @@ import Router from './Router';
 import { store } from '../../redux/store';
 
 const theme = createTheme({
+  typography: {
+    // fontFamily: 'Noto Sans, sans-serif',
+  },
   palette: {
     primary: {
       main: '#AB3F21',
@@ -19,14 +22,17 @@ const theme = createTheme({
     neutral: {
       main: '#646464',
       contrastText: '#fff',
+      dark: '#494949',
     },
     paleGreen: {
       main: '#81B19B',
       contrastText: '#fff',
+      dark: '#6B9380',
     },
     paleYellow: {
       main: '#FFCB7D',
       contrastText: '#fff',
+      dark: '#C9A164',
     },
   },
   components: {
@@ -34,9 +40,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 'bold',
-        },
-        disabled: {
-          borderBottom: '0px',
+          '&.Mui-disabled': {
+            borderBottom: '0px',
+          },
         },
       },
     },

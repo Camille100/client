@@ -24,6 +24,7 @@ import AdminEquipments from '../Admin/Equipments';
 import AdminInvites from '../Admin/Invites';
 import AdminNotifications from '../Admin/Notifications';
 import AdminUsers from '../Admin/Users';
+import Assistance from '../Assistance';
 
 const PrivateRoute = ({ children }) => {
   const isUserAuthenticated = useSelector((state) => state.user.loggedIn);
@@ -86,6 +87,14 @@ const RoutesWrapper = () => (
         element={(
           <PrivateRoute>
             <EventHistory />
+          </PrivateRoute>
+                )}
+      />
+      <Route
+        path="/assistance"
+        element={(
+          <PrivateRoute>
+            <Assistance />
           </PrivateRoute>
                 )}
       />
