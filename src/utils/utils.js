@@ -12,6 +12,22 @@ export const formatDate = (date) => {
   return newDate.toLocaleDateString('fr-FR', options);
 };
 
+export const formatDateTime = (datetime) => {
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+
+  const timeOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  const newDate = new Date(datetime);
+  return `${newDate.toLocaleDateString('fr-FR', options)} à ${newDate.toLocaleTimeString('fr-FR', timeOptions)}`;
+};
+
 export const calculateLvl = (xp) => {
   const xpObj = {
     level: 0,
@@ -91,4 +107,11 @@ export const calculateLvl = (xp) => {
     return xpObj;
   }
   return xpObj;
+};
+
+export const truncateString = (str, num) => {
+  if (str.length <= num) {
+    return str;
+  }
+  return `${str.slice(0, num)}...`;
 };

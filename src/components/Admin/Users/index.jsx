@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-unused-vars */
 import React, {
   useCallback,
@@ -14,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
+import { formatDateTime } from '../../../utils/utils';
 import { getUsers, updateUser, deleteUser } from '../../../services/userServices';
 import Warning from '../ReusableComponents/Warning';
 
@@ -40,10 +42,16 @@ const AdminUsers = () => {
     {
       accessorKey: 'created_at',
       header: 'Créé le',
+      accessorFn: (row) => (
+        <Typography sx={{ fontSize: '14px' }}>{formatDateTime(row.created_at)}</Typography>
+      ),
     },
     {
       accessorKey: 'updated_at',
       header: 'Mis à jour le',
+      accessorFn: (row) => (
+        <Typography sx={{ fontSize: '14px' }}>{formatDateTime(row.updated_at)}</Typography>
+      ),
     },
   ], []);
 
