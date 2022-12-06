@@ -5,6 +5,9 @@
 /** @jsx jsx */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Map, {
+  GeolocateControl, Marker,
+} from 'react-map-gl';
 import {
   Card,
   CardContent,
@@ -20,6 +23,7 @@ import {
   CardHeader,
   Box,
 } from '@mui/material';
+import PlaceIcon from '@mui/icons-material/Place';
 import HelpIcon from '@mui/icons-material/Help';
 import { css, jsx } from '@emotion/react';
 import { getDump } from '../../services/dumpServices';
@@ -28,16 +32,25 @@ import CleaningForm from './components/CleaningForm';
 import Gallery from '../Admin/Dumps/components/Gallery';
 
 const styles = {
-  dumpInfos: css`
+  infos: css`
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
    margin-top: 30px;
   `,
+  dumpInfos: css`
+   margin-top: 30px;
+   margin-right: 40px;
+  `,
   title: css`
-  font-size: 18px;
+    font-size: 13px;
+    font-weight: bold;
     margin-bottom: 10px;
     color: #5c5c5c;
   `,
   text: css`
-  font-size: 16px;
+    font-size: 13px;
     margin-bottom: 5px;
     margin-left: 5px;
     color: #6d6d6d;
@@ -50,6 +63,7 @@ const styles = {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 30px;
     margin-left: 10px;
   `,
   button: css`
@@ -61,19 +75,19 @@ const Dump = () => {
   const params = useParams();
   const [open, setOpen] = useState(false);
   const [dump, setDump] = useState({});
+  const [viewport, setViewport] = useState({});
 
   useEffect(() => {
     getDump(params.dumpId).then((res) => {
       setDump(res.data);
+      setViewport({
+        ...viewport,
+        latitude: res.data.location.coordinates[1],
+        longitude: res.data.location.coordinates[0],
+        zoom: 12,
+      });
     });
   }, []);
-
-  const srcset = (image, size, rows = 1, cols = 1) => ({
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${
-      size * rows
-    }&fit=crop&auto=format&dpr=2 2x`,
-  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -88,54 +102,77 @@ const Dump = () => {
         >
           <CardHeader title="Informations" subheader={`décharge créée le: ${formatDate(dump.created_at)}`} />
           <CardContent>
-            <Box sx={{ height: '400px' }}>
-              <Typography sx={{
-                display: 'flex', flexDirection: 'row', fontSize: '12px', color: '#7D7D7D',
-              }}
-              >
-                Statut:
-                <Typography sx={{ fontSize: '12px', marginLeft: '5px' }}>
-                  {dump.status === 'open' ? 'Ouverte' : 'En attente'}
-                </Typography>
+            <Typography sx={{
+              display: 'flex', flexDirection: 'row', fontSize: '12px', color: '#7D7D7D',
+            }}
+            >
+              Statut:
+              <Typography sx={{ fontSize: '12px', marginLeft: '5px' }}>
+                {dump.status === 'open' ? 'Ouverte' : 'En attente'}
               </Typography>
-              <Gallery pictures={dump.pictures} height="auto" width="500px" />
-            </Box>
+            </Typography>
+            <Map
+              mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+              initialViewState={viewport}
+              mapStyle="mapbox://styles/mapbox/light-v9"
+              style={{ minWidth: '50vw', height: '50vh' }}
+            >
+              <GeolocateControl
+                positionOptions={{ enableHighAccuracy: true }}
+                trackUserLocation
+              />
+              <Marker
+                longitude={dump.location.coordinates[0]}
+                latitude={dump.location.coordinates[1]}
+                anchor="top"
+              >
+                <PlaceIcon
+                  sx={{
+                    fontSize: '30px',
+                  }}
+                  color="primary"
+                />
+              </Marker>
+            </Map>
             <Divider variant="middle" />
-            <div css={styles.dumpInfos}>
-              <div css={styles.section}>
-                <Typography variant="subtitle2" sx={styles.title}>Description:</Typography>
-                <Typography variant="body2" sx={styles.text}>{dump.comment}</Typography>
+            <Box sx={styles.infos}>
+              <div css={styles.dumpInfos}>
+                <div css={styles.section}>
+                  <Typography variant="subtitle2" sx={styles.title}>Description:</Typography>
+                  <Typography variant="body2" sx={styles.text}>{dump.comment}</Typography>
+                </div>
+                <div css={styles.section}>
+                  <Typography variant="subtitle2" sx={styles.title}>Décharge accessible:</Typography>
+                  {dump.accessible.onCar && <Typography variant="body2" sx={styles.text}>En voiture</Typography>}
+                  {dump.accessible.onFoot && <Typography variant="body2" sx={styles.text}>A pied</Typography>}
+                </div>
+                <div css={styles.section}>
+                  <Typography variant="subtitle2" sx={styles.title}>Equipements nécessaires au nettoyage: </Typography>
+                  {dump.equipments.map((equipment, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`equipment-${index + 1}`}
+                      sx={styles.text}
+                    >
+                      {equipment.name}
+                    </Typography>
+                  ))}
+                </div>
               </div>
-              <div css={styles.section}>
-                <Typography variant="subtitle2" sx={styles.title}>Décharge accessible:</Typography>
-                {dump.accessible.onCar && <Typography variant="body2" sx={styles.text}>En voiture</Typography>}
-                {dump.accessible.onFoot && <Typography variant="body2" sx={styles.text}>A pied</Typography>}
-              </div>
-              <div css={styles.section}>
-                <Typography variant="subtitle2" sx={styles.title}>Equipements nécessaires au nettoyage: </Typography>
-                {dump.equipments.map((equipment, index) => (
-                  <Typography
-                    variant="body2"
-                    key={`equipment-${index + 1}`}
-                    sx={styles.text}
-                  >
-                    {equipment.name}
-                  </Typography>
-                ))}
-              </div>
-            </div>
+              <Gallery pictures={dump.pictures} height="auto" width="450px" />
+            </Box>
           </CardContent>
           <CardActions sx={styles.buttons}>
             {dump.status === 'open'
             && (
-            <Button
-              size="medium"
-              variant="contained"
-              sx={styles.button}
-              onClick={handleOpen}
-            >
-              Nettoyer la décharge
-            </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                sx={styles.button}
+                onClick={handleOpen}
+              >
+                Nettoyer la décharge
+              </Button>
             )}
             {dump.status === 'waiting'
             && (
